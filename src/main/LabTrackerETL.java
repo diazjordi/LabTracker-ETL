@@ -10,7 +10,7 @@ import setup.PropertyManager;
 
 public class LabTrackerETL {
 	
-	private static ArrayList<Lab> labs;
+	private static ArrayList<Lab> labs = new ArrayList<Lab>();
 
 	public static void main(String[] args) throws IOException {
 		
@@ -20,16 +20,18 @@ public class LabTrackerETL {
 
 		// Create REST client
 		JerseyClientGet client = new JerseyClientGet();
-
+		
+		String[] ids = {"1002","1010","1012","1016","1015"};
 		// make GET request
-		String response = client.getMap(1002);
+		ArrayList<String> response = client.getMaps(ids);
 		
 		// load JSON into object
 		JSONParserCustom jsParser = new JSONParserCustom();
-		jsParser.parseLab(response);
+		jsParser.parseLabs(response);
+		System.out.println(labs);
 		
 		// parse object into Lab, Stations
-
+		
 		// push data to DB
 
 	}

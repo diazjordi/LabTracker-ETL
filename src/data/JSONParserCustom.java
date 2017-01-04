@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import main.LabTrackerETL;
 import models.Lab;
 import models.Station;
 
@@ -18,20 +19,37 @@ public class JSONParserCustom {
 		super();
 	}
 
-	public void parseLab(String response) {
+	public void parseLab(String json) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			// Convert JSON string to Object
-			String jsonInString = response;
-			lab = mapper.readValue(jsonInString, Lab.class);
+			lab = mapper.readValue(json, Lab.class);
 			lab.setUnitCounts();
-			System.out.println(lab);
+			LabTrackerETL.addLab(lab);
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void parseLabs(ArrayList<String> json) {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		for(int i = 0; i < json.size(); i++){
+			try {
+				// Convert JSON string to JSON-Mapped Object
+				lab = mapper.readValue(json.get(i), Lab.class);
+				lab.setUnitCounts();
+				LabTrackerETL.addLab(lab);
+			} catch (JsonGenerationException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
