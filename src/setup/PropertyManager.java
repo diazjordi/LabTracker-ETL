@@ -14,14 +14,14 @@ public class PropertyManager {
 	private static PropertyManager propertyManagerInstance;
 
 	// General properties path
-	private static String propertyFilePath = "/home/developer/Desktop/LabTracker-v2/Properties/LabTracker.properties";
+	private static String propertyFilePath = null;
 	private static Properties mainProperties = new Properties();
 
 	// Jersey Client properties
 	private static Map<String, String> apiClientProps = new HashMap<String, String>();
 	
 	// Map code
-	private static Map<String, String> mapCodes = new HashMap<String, String>();
+	private static Map<String, String> labCodes = new HashMap<String, String>();
 
 	// Parser properties
 	private static Map<String, String> jsonParserProperties = new HashMap<String, String>();
@@ -33,6 +33,7 @@ public class PropertyManager {
 	//private static final Logger logger = LogManager.getLogger("LabTracker");
 
 	private PropertyManager() {
+		findPropertyFiles();
 	}
 
 	public static PropertyManager getPropertyManagerInstance() {
@@ -40,6 +41,19 @@ public class PropertyManager {
 			propertyManagerInstance = new PropertyManager();
 		}
 		return propertyManagerInstance;
+	}
+	
+	public void findPropertyFiles(){
+		String propertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
+		boolean pfExists = new File(propertyFilePath).exists();
+		if(pfExists){
+			System.out.println("Property file found at " + propertyFilePath);
+			PropertyManager.propertyFilePath = propertyFilePath;
+		} else {
+			System.out.println("Property file not found in Properties directory");
+			System.out.println(propertyFilePath);
+			System.exit(1);
+		}
 	}
 
 	public void loadProps() throws IOException {
@@ -59,15 +73,12 @@ public class PropertyManager {
 
 	private void setProps() throws IOException {
 		Set<Object> keys = mainProperties.keySet();
-		// Iterate main property object and parse
-		// properties into their respective maps
-		// based on individual key value
 		for (Object k : keys) {
 			String key = (String) k;
 			if (key.startsWith("api")) {
 				apiClientProps.put(key, mainProperties.getProperty(key));
-			} else if (key.startsWith("map")) {
-				mapCodes.put(key, mainProperties.getProperty(key));
+			} else if (key.startsWith("lab")) {
+				labCodes.put(key.substring(4), mainProperties.getProperty(key));
 			} else if (key.startsWith("parser")) {
 				jsonParserProperties.put(key, mainProperties.getProperty(key));
 			} else if (key.startsWith("db")) {
@@ -102,12 +113,12 @@ public class PropertyManager {
 		PropertyManager.apiClientProps = apiClientProps;
 	}
 
-	public static Map<String, String> getMapCodes() {
-		return mapCodes;
+	public static Map<String, String> getLabCodes() {
+		return labCodes;
 	}
 
-	public static void setMapCodes(Map<String, String> mapCodes) {
-		PropertyManager.mapCodes = mapCodes;
+	public static void setLabCodes(Map<String, String> labCodes) {
+		PropertyManager.labCodes = labCodes;
 	}
 
 	public static Map<String, String> getJsonParserProperties() {

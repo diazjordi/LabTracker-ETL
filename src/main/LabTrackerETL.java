@@ -17,22 +17,24 @@ public class LabTrackerETL {
 		// Get props
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
 		propertyManager.loadProps();
+//		propertyManager.getLabCodes().get(1).toString();
 
 		// Create REST client
-		JerseyClientGet client = new JerseyClientGet();
+		//JerseyClientGet client = new JerseyClientGet();
 		
-		String[] ids = {"1002","1010","1012","1016","1015"};
+		//String[] ids = {"1002"};
 		// make GET request
-		ArrayList<String> response = client.getMaps(ids);
+		//ArrayList<String> response = client.getMaps(ids);
 		
 		// load JSON into object
-		JSONParserCustom jsParser = new JSONParserCustom();
-		jsParser.parseLabs(response);
-		System.out.println(labs);
+		//JSONParserCustom jsParser = new JSONParserCustom();
+		//jsParser.parseLabs(response);
+		//System.out.println(labs);
 		
 		// parse object into Lab, Stations
 		
 		// push data to DB
+		
 
 	}
 
