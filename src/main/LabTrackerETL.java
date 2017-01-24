@@ -14,26 +14,23 @@ public class LabTrackerETL {
 
 	public static void main(String[] args) throws IOException {
 		
-		// Get props
+		// get props
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
+		//propertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker-v2/Properties/LabTracker.properties");
 		propertyManager.loadProps();
 
-		// Create REST client
+		// create REST client
 		JerseyClientGet client = new JerseyClientGet();
 		
-		//String[] ids = {"1002"};
-		// make GET request
+		// make GET request and store JSON reponse
 		ArrayList<String> response = client.getMaps();
 		
-		// load JSON into object
+		// parse JSON reponse into objects
 		JSONParserCustom jsParser = new JSONParserCustom();
 		jsParser.parseLabs(response);
-		System.out.println(labs);
+		System.out.println(labs);		
 		
-		// parse object into Lab, Stations
-		
-		// push data to DB
-		
+		// push data to DB		
 
 	}
 

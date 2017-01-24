@@ -44,16 +44,20 @@ public class PropertyManager {
 	}
 	
 	public void findPropertyFiles(){
-		String propertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
-		boolean pfExists = new File(propertyFilePath).exists();
-		if(pfExists){
-			System.out.println("Property file found at " + propertyFilePath);
-			PropertyManager.propertyFilePath = propertyFilePath;
+		if(propertyFilePath == null){
+			String propertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
 		} else {
-			System.out.println("Property file not found in Properties directory");
-			System.out.println(propertyFilePath);
-			System.exit(1);
+			boolean pfExists = new File(propertyFilePath).exists();
+			if(pfExists){
+				System.out.println("Property file found at " + propertyFilePath);
+				PropertyManager.propertyFilePath = propertyFilePath;
+			} else {
+				System.out.println("Property file not found in Properties directory");
+				System.out.println(propertyFilePath);
+				System.exit(1);
+			}
 		}
+		
 	}
 
 	public void loadProps() throws IOException {

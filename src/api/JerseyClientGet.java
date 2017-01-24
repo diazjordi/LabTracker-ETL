@@ -22,10 +22,11 @@ public class JerseyClientGet {
 		super();
 		apiClientProps = PropertyManager.getApiClientProps();
 		labCodes = PropertyManager.getLabCodes();
-		authCode = apiClientProps.get("api.AuthCode");
-		getMapURL = apiClientProps.get("api.GetMapURL");
 		if(apiClientProps.isEmpty() || labCodes.isEmpty()){
 			System.out.println("JerseyClientGet could not load necessary properties");
+		} else {
+			authCode = apiClientProps.get("api.AuthCode");
+			getMapURL = apiClientProps.get("api.GetMapURL");
 		}
 	}
 
