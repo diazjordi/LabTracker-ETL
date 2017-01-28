@@ -1,6 +1,5 @@
 package db;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -58,7 +57,7 @@ public class DBManager {
 		}
 	}
 		
-	public void updateLabTable(ArrayList<Lab> labs) throws SQLException{
+	public void updateLabTables(ArrayList<Lab> labs) throws SQLException{
 		//logger.trace("*-----DBConnector is Writing to Lab Status table!-----*");
 		for(Lab lab: labs){
 			try {
@@ -66,7 +65,7 @@ public class DBManager {
 				for (Station station : lab.getMapStations()) {
 					String query = "INSERT INTO "
 							+ lab.getMapDesc()
-							+ " (id, map_stations_id, map_id, group_id, station_id, hostname, ip, station_name, status, timestamp) "
+							+ " (id, map_station_id, map_id, group_id, station_id, host_name, ip, station_name, status, timestamp) "
 							+ " VALUES ('" 
 							+ station.getId() + "','"
 							+ station.getMapStationsId() + "','"
@@ -76,8 +75,8 @@ public class DBManager {
 							+ station.getHostName().toUpperCase() + "','"
 							+ station.getIpAddresses().toUpperCase() + "','"
 							+ station.getStationName().toUpperCase() + "','"
-							+ station.getStatus().toUpperCase() + "','"
-							+ "', NOW())";
+							+ station.getStatus().toUpperCase() + "',"
+							+ "NOW())";
 					//logger.trace(query);
 					stmt.executeUpdate(query);
 				}
@@ -102,11 +101,11 @@ public class DBManager {
 						+ lab.getMapName().toUpperCase() + "','" 
 						+ lab.getMapDesc().toUpperCase()	+ "','" 
 						+ lab.getUnitsAvail() + "','"
-						+ lab.getUnitsInUse() + "',"
+						+ lab.getUnitsInUse() + "','"
 						+ lab.getUnitsOff() + "',"
-						+ " NOW())";
+						+ "NOW())";
 					//logger.trace(query);
-					stmt.executeUpdate(query);			
+					stmt.executeUpdate(query);
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 				//logger.error(ex);

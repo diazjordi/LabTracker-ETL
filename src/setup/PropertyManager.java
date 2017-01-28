@@ -43,21 +43,21 @@ public class PropertyManager {
 		return propertyManagerInstance;
 	}
 	
-	public void findPropertyFiles(){
-		if(propertyFilePath == null){
-			String propertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
-		} else {
+	public void findPropertyFiles() {
+		String defaultPropertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
+		if (propertyFilePath == null) {
+			System.out.println("User did not set property file path, using default path.");
+			propertyFilePath = defaultPropertyFilePath;
+		} else if (propertyFilePath != null) {
 			boolean pfExists = new File(propertyFilePath).exists();
-			if(pfExists){
-				System.out.println("Property file found at " + propertyFilePath);
-				PropertyManager.propertyFilePath = propertyFilePath;
-			} else {
-				System.out.println("Property file not found in Properties directory");
-				System.out.println(propertyFilePath);
-				System.exit(1);
+			if (pfExists) {
+				System.out.println("User set Property file, found at " + propertyFilePath);
 			}
+		} else {
+			System.out.println("Property file not found in Properties directory or set by user");
+			System.out.println(propertyFilePath);
+			System.exit(1);
 		}
-		
 	}
 
 	public void loadProps() throws IOException {
