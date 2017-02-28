@@ -46,6 +46,7 @@ public class Lab {
 	private int unitsInUse;
 	@JsonProperty("unitsOffline")
 	private int unitsOffline;
+	private int unitsSuppressed;
 
 	public Lab() {
 		super();
@@ -224,11 +225,20 @@ public class Lab {
 	public void setUnitsOff(int unitsOff) {
 		this.unitsOffline = unitsOff;
 	}
+	
+	public int getUnitsSuppressed() {
+		return unitsSuppressed;
+	}
+
+	public void setUnitsSuppressed(int UnitsSuppressed) {
+		this.unitsSuppressed = UnitsSuppressed;
+	}	
 
 	public void setUnitCounts() {
 		int avail = 0;
 		int inuse = 0;
 		int off = 0;
+		int sup = 0;
 		for (Station stat : mapStations) {
 			if (stat.getStatus().matches("Available")) {
 				avail++;
@@ -236,11 +246,14 @@ public class Lab {
 				inuse++;
 			} else if (stat.getStatus().matches("Offline")) {
 				off++;
+			} else if (stat.getStatus().matches("SUPPRESSED")){
+				sup++;
 			}
 		}
 		unitsAvailable = avail;
 		unitsInUse = inuse;
 		unitsOffline = off;
+		unitsSuppressed= sup;
 	}
 
 
@@ -265,6 +278,7 @@ public class Lab {
 				"	Units Available:" + unitsAvailable +  "\n" +
 				"	Units In Use:" + unitsInUse +  "\n" +
 				"	Units Offline:" + unitsOffline +  "\n" +
+				"	Units Suppressed:" + unitsSuppressed +  "\n" +
 				"	MapStations: " +  "\n" + mapStations;
 	}
 	

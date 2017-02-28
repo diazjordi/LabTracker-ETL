@@ -20,7 +20,8 @@ public class LabTrackerETL {
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
 		// If you want to hard code path to property file, set here. 
 		// Else comment out the line and it will look for property file in default directory
-		//propertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker-v2/Properties/LabTracker.properties");
+		
+		PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker-v2/Properties/LabTracker.properties");
 		propertyManager.loadProps();
 
 		// create REST client
@@ -32,7 +33,7 @@ public class LabTrackerETL {
 		// parse JSON reponse into objects
 		JSONParserCustom jsParser = new JSONParserCustom();
 		jsParser.parseLabs(response);
-					
+				
 		// push data to DB
 		DBManager db = new DBManager();
 		try {

@@ -25,6 +25,9 @@ public class PropertyManager {
 
 	// Parser properties
 	private static Map<String, String> jsonParserProperties = new HashMap<String, String>();
+	
+	// Suppression properties
+	private static Map<String, String> suppressionProperties = new HashMap<String, String>();
 
 	// Database properties
 	private static Map<String, String> databaseProperties = new HashMap<String, String>();
@@ -33,7 +36,6 @@ public class PropertyManager {
 	//private static final Logger logger = LogManager.getLogger("LabTracker");
 
 	private PropertyManager() {
-		findPropertyFiles();
 	}
 
 	public static PropertyManager getPropertyManagerInstance() {
@@ -41,6 +43,23 @@ public class PropertyManager {
 			propertyManagerInstance = new PropertyManager();
 		}
 		return propertyManagerInstance;
+	}
+	
+	public void loadProps() throws IOException {
+		// Check if user supplied Property file
+		findPropertyFiles();
+		// Load prop file into main property object
+		File mainPropertyFile = new File(propertyFilePath);
+		FileInputStream mainInputStream = new FileInputStream(mainPropertyFile);
+		mainProperties.load(mainInputStream);
+		mainInputStream.close();
+		// Check Property has actual values
+		// if so proceed to retrieve properties
+		if (!mainProperties.isEmpty()) {
+			this.setProps();
+		} else if (mainProperties.isEmpty()) {
+			//error.fatalError("No Properties Found!");
+		}
 	}
 	
 	public void findPropertyFiles() {
@@ -60,20 +79,7 @@ public class PropertyManager {
 		}
 	}
 
-	public void loadProps() throws IOException {
-		// Load prop file into main property object
-		File mainPropertyFile = new File(propertyFilePath);
-		FileInputStream mainInputStream = new FileInputStream(mainPropertyFile);
-		mainProperties.load(mainInputStream);
-		mainInputStream.close();
-		// Check Property has actual values
-		// if so proceed to retrieve properties
-		if (!mainProperties.isEmpty()) {
-			this.setProps();
-		} else if (mainProperties.isEmpty()) {
-			//error.fatalError("No Properties Found!");
-		}
-	}
+	
 
 	private void setProps() throws IOException {
 		Set<Object> keys = mainProperties.keySet();
@@ -95,8 +101,6 @@ public class PropertyManager {
 		return propertyFilePath;
 	}
 	
-	// Getters for property maps
-
 	public static void setPropertyFilePath(String propertyFilePath) {
 		PropertyManager.propertyFilePath = propertyFilePath;
 	}
@@ -131,6 +135,14 @@ public class PropertyManager {
 
 	public static void setJsonParserProperties(Map<String, String> jsonParserProperties) {
 		PropertyManager.jsonParserProperties = jsonParserProperties;
+	}
+	
+	public static Map<String, String> getSuppressionProperties() {
+		return suppressionProperties;
+	}
+
+	public static void setSuppressionProperties(Map<String, String> suppressionProperties) {
+		PropertyManager.suppressionProperties = suppressionProperties;
 	}
 
 	public static Map<String, String> getDatabaseProperties() {
