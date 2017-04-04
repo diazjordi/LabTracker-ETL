@@ -8,4 +8,4 @@ Required Libraries
 - JACKSON-DATABIND-2.6.7  or newer
 - JSON-SIMPLE-1.1.1 or newer
 - LOG4J-CORE-2.8 or newer
-- MYSQL-CONNECTOR-JAVA-5.1.40-BIN or newer
+- MYSQL-CONNECTOR-JAVA-5.1.40 or newer
