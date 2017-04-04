@@ -198,6 +198,8 @@ public class Station {
 			this.status = "In Use";
 		} else if (status.matches("Offline")) {
 			this.status = "Offline";
+		} else if (status.matches("Suppressed")) {
+			this.status = "Suppressed";
 		}
 	}
 

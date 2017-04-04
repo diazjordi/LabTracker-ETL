@@ -27,6 +27,7 @@ public class PropertyManager {
 	private static Map<String, String> jsonParserProperties = new HashMap<String, String>();
 	
 	// Suppression properties
+	private static String supFilePath = null;
 	private static Map<String, String> suppressionProperties = new HashMap<String, String>();
 
 	// Database properties
@@ -77,9 +78,7 @@ public class PropertyManager {
 			System.out.println(propertyFilePath);
 			System.exit(1);
 		}
-	}
-
-	
+	}	
 
 	private void setProps() throws IOException {
 		Set<Object> keys = mainProperties.keySet();
@@ -93,10 +92,27 @@ public class PropertyManager {
 				jsonParserProperties.put(key, mainProperties.getProperty(key));
 			} else if (key.startsWith("db")) {
 				databaseProperties.put(key, mainProperties.getProperty(key));
-			} 
+			} else if (key.startsWith("sup")) {
+				supFilePath = mainProperties.getProperty(key);
+				retrieveSuppressionList(supFilePath);
+			}
 		}
 	}
-
+	
+	private void retrieveSuppressionList(String filePath) throws IOException {
+		// Temp Properties object to load props from file
+		Properties suppressionProps = new Properties();
+		File suppressionFile = new File(filePath);
+		FileInputStream suppressionFileInput = new FileInputStream(suppressionFile);
+		suppressionProps.load(suppressionFileInput);
+		// Iterate through props
+		Set<Object> keys = suppressionProps.keySet();
+		for(Object k: keys){
+			String key = (String) k;
+			suppressionProperties.put(key, suppressionProps.getProperty(key));
+		}
+	}	
+	
 	public static String getPropertyFilePath() {
 		return propertyFilePath;
 	}

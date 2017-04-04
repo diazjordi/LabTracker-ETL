@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,6 @@ public class JSONParserCustom {
 	private Lab lab = new Lab();
 	
 	// Suppression properties
-	@SuppressWarnings("unused")
 	private static Map<String, String> suppressionProperties = new HashMap<String, String>();
 
 	public JSONParserCustom() {
@@ -68,12 +68,14 @@ public class JSONParserCustom {
 	}
 	
 	public void setSuppressedStations(Lab lab){
-		for(Station station: lab.getMapStations()){
-			if(station.getHostName().matches("")){
-				station.setStatus("SUPPRESSED");
+		for(String value: suppressionProperties.values()){
+			for(Station station: lab.getMapStations()){
+				if(value.toLowerCase().matches(station.getHostName().toLowerCase())){
+					station.setStatus("Suppressed");
+				}
 			}
 		}
-	}
+	}	
 
 	public ArrayList<Station> getStations(JSONObject lab) {
 		ArrayList<Station> stations = null;

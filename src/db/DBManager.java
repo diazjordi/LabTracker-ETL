@@ -37,7 +37,7 @@ public class DBManager {
 		//logger.trace("*-----DBConnector is Creating DB Connection!-----*");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, username, password);
+			this.con = DriverManager.getConnection("jdbc:mysql://10.82.244.203:3306/" + database, username, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			//logger.error(e);	
@@ -116,5 +116,13 @@ public class DBManager {
 	public void finalize(){
 		closeConnection();
 	}
+
+	@Override
+	public String toString() {
+		return "DBManager [con=" + con + ", database=" + database + ", username=" + username + ", password=" + password
+				+ ", databaseProperties=" + databaseProperties + "]";
+	}
+	
+	
 
 }
