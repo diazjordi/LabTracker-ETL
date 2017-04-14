@@ -32,6 +32,10 @@ public class PropertyManager {
 
 	// Database properties
 	private static Map<String, String> databaseProperties = new HashMap<String, String>();
+	
+	// HTML Templates & Properties
+	private static Map<String, String> htmlProperties = new HashMap<String, String>();
+
 
 	// Logger
 	//private static final Logger logger = LogManager.getLogger("LabTracker");
@@ -92,10 +96,12 @@ public class PropertyManager {
 				jsonParserProperties.put(key, mainProperties.getProperty(key));
 			} else if (key.startsWith("db")) {
 				databaseProperties.put(key, mainProperties.getProperty(key));
+			} else if (key.startsWith("html")) {
+				htmlProperties.put(key, mainProperties.getProperty(key));
 			} else if (key.startsWith("sup")) {
 				supFilePath = mainProperties.getProperty(key);
 				retrieveSuppressionList(supFilePath);
-			}
+			} 
 		}
 	}
 	
@@ -167,6 +173,14 @@ public class PropertyManager {
 
 	public static void setDatabaseProperties(Map<String, String> databaseProperties) {
 		PropertyManager.databaseProperties = databaseProperties;
+	}
+	
+	public Map<String, String> getHtmlProperties() {
+		return htmlProperties;
+	}
+	
+	public void setHtmlProperties(Map<String, String> htmlProperties) {
+		PropertyManager.htmlProperties = htmlProperties;
 	}
 
 	public static void setPropertyManagerInstance(PropertyManager propertyManagerInstance) {

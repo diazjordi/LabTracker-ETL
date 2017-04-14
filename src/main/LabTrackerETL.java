@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import api.JerseyClientGet;
 import data.JSONParserCustom;
 import db.DBManager;
+import html.HTMLCreator;
 import models.Lab;
 import setup.PropertyManager;
 
 public class LabTrackerETL {
 	
-	private static ArrayList<Lab> labs = new ArrayList<Lab>();
+	public static ArrayList<Lab> labs = new ArrayList<Lab>();
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
 		
 		// Get props
@@ -31,9 +33,12 @@ public class LabTrackerETL {
 		ArrayList<String> response = client.getMaps();
 		
 		// parse JSON reponse into objects
-		JSONParserCustom jsParser = new JSONParserCustom();
-		jsParser.parseLabs(response);
+		JSONParserCustom jsonParser = new JSONParserCustom();
+		jsonParser.parseLabs(response);
 				
+		// Create HTML Maps
+		HTMLCreator creator = new HTMLCreator(labs);
+		
 		// push data to DB
 		DBManager db = new DBManager();
 		try {

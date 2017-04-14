@@ -1,5 +1,8 @@
 package models;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Station {
@@ -201,6 +204,23 @@ public class Station {
 		} else if (status.matches("Suppressed")) {
 			this.status = "Suppressed";
 		}
+	}
+	
+	public String getStationNameShort() {
+		String name;
+		//Pattern pat = Pattern.compile("(?<=ec-\\w)(\\w*)(?=-ln)");// old pattern
+		//Matcher mat = pat.matcher(stationName);
+		Pattern pat = Pattern.compile("(?<=\\w{2}-\\w{6}-\\w)(\\w*)");// new pattern
+		Matcher mat = pat.matcher(this.hostName);
+		
+		if (mat.find()) {
+			name = mat.group().toString();
+		} else if (mat.find()) {
+			name = mat.group().toString();
+		} else {
+			name = this.stationName;
+		}
+		return name;
 	}
 
 	@Override
