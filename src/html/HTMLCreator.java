@@ -62,7 +62,7 @@ public class HTMLCreator {
 		String availColor      = "<FONT COLOR=\"#FFCB2F\">";
 		String inUseColor      = "<FONT COLOR=\"#665113\">";
 		String offlineColor    = "<FONT COLOR=\"#595138\">";
-		String suppressedColor =  "<FONT COLOR=\"#000000\">";
+		String suppressedColor = "<FONT COLOR=\"#000000\">";
 		// HTML Match Strings
 		String begMatch = "<!--$";
 		String endMatch = "-->";
@@ -71,8 +71,9 @@ public class HTMLCreator {
 		Integer numOffline = currentLab.getUnitsOff();
 		Integer numUnits = currentLab.getUnitsAvail() + currentLab.getUnitsInUse() + currentLab.getUnitsOff();
 		for (Station station : currentLab.getMapStations()) {
+			
 			if (station.getStatus().matches("Available")) {
-				String completeMatch = begMatch + station.getStationNameShort()	+ endMatch;
+				String completeMatch = begMatch + station.getStationNameShort().toLowerCase() + endMatch;
 				if (htmlString.contains(completeMatch)) {
 					htmlString = htmlString.replace(completeMatch, availColor);
 				}
@@ -86,6 +87,7 @@ public class HTMLCreator {
 				String completeMatch = begMatch + station.getStationNameShort()	+ endMatch + station.getStationNameShort().toUpperCase();
 				String underLinedColor = offlineColor + "<u>" + station.getStationNameShort().toUpperCase() + "</u>";
 				if (htmlString.contains(completeMatch)) {
+					//System.out.println(completeMatch);
 					htmlString = htmlString.replace(completeMatch,underLinedColor);
 				}
 			}			

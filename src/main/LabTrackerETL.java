@@ -40,16 +40,16 @@ public class LabTrackerETL {
 		HTMLCreator creator = new HTMLCreator(labs);
 		
 		// push data to DB
-		DBManager db = new DBManager();
-		try {
-			db.updateLabTables(labs);
-			db.updateLabStatusTable(labs);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			db.closeConnection();
-		}
-		db.finalize();
+//		DBManager db = new DBManager();
+//		try {
+//			db.updateLabTables(labs);
+//			db.updateLabStatusTable(labs);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			db.closeConnection();
+//		}
+//		db.finalize();
 
 	}
 
