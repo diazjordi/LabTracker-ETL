@@ -94,7 +94,7 @@ public class DBManager {
 				Statement stmt = (com.mysql.jdbc.Statement) con.createStatement();
 				String query = "INSERT INTO "
 						+ "labstatus"
-						+ " (id, map_id, map_name, map_desc, units_available, units_in_use, units_offline, timestamp) "
+						+ " (id, map_id, map_name, map_desc, units_available, units_in_use, units_offline, units_suppressed, timestamp) "
 						+ " VALUES ('" 
 						+ lab.getId()	+ "','" 
 						+ lab.getMapId() + "','"
@@ -102,10 +102,13 @@ public class DBManager {
 						+ lab.getMapDesc().toUpperCase()	+ "','" 
 						+ lab.getUnitsAvail() + "','"
 						+ lab.getUnitsInUse() + "','"
-						+ lab.getUnitsOff() + "',"
+						+ lab.getUnitsOff() + "','"
+						+ lab.getUnitsSuppressed() + "',"
 						+ "NOW())";
 					//logger.trace(query);
-					stmt.executeUpdate(query);
+				System.out.println(query);	
+				stmt.executeUpdate(query);
+					
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 				//logger.error(ex);
