@@ -65,13 +65,14 @@ public class DBManager {
 				for (Station station : lab.getMapStations()) {
 					String query = "INSERT INTO "
 							+ lab.getMapDesc()
-							+ " (id, map_station_id, map_id, group_id, station_id, host_name, ip, station_name, status, timestamp) "
+							+ " (id, map_station_id, map_id, group_id, station_id, os, host_name, ip, station_name, status, timestamp) "
 							+ " VALUES ('" 
 							+ station.getId() + "','"
 							+ station.getMapStationsId() + "','"
 							+ station.getMapId() + "','"
 							+ station.getGroupId() + "','"
 							+ station.getStationId() + "','"
+							+ station.getOs() + "','"
 							+ station.getHostName().toUpperCase() + "','"
 							+ station.getIpAddresses().toUpperCase() + "','"
 							+ station.getStationName().toUpperCase() + "','"
@@ -94,7 +95,7 @@ public class DBManager {
 				Statement stmt = (com.mysql.jdbc.Statement) con.createStatement();
 				String query = "INSERT INTO "
 						+ "labstatus"
-						+ " (id, map_id, map_name, map_desc, units_available, units_in_use, units_offline, units_suppressed, timestamp) "
+						+ " (id, map_id, map_name, map_desc, units_available, units_in_use, units_offline, units_suppressed, units_windows, units_mac, timestamp) "
 						+ " VALUES ('" 
 						+ lab.getId()	+ "','" 
 						+ lab.getMapId() + "','"
@@ -103,12 +104,12 @@ public class DBManager {
 						+ lab.getUnitsAvail() + "','"
 						+ lab.getUnitsInUse() + "','"
 						+ lab.getUnitsOff() + "','"
-						+ lab.getUnitsSuppressed() + "',"
+						+ lab.getUnitsSuppressed() + "','"
+						+ lab.getUnitsWindows() + "','"
+						+ lab.getUnitsMac() + "',"
 						+ "NOW())";
 					//logger.trace(query);
-				System.out.println(query);	
-				stmt.executeUpdate(query);
-					
+				stmt.executeUpdate(query);					
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 				//logger.error(ex);

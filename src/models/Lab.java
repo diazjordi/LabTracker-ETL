@@ -46,7 +46,10 @@ public class Lab {
 	private int unitsInUse;
 	@JsonProperty("unitsOffline")
 	private int unitsOffline;
+	
 	private int unitsSuppressed;
+	private int unitsWindows;
+	private int unitsMac;
 
 	public Lab() {
 		super();
@@ -233,6 +236,22 @@ public class Lab {
 	public void setUnitsSuppressed(int UnitsSuppressed) {
 		this.unitsSuppressed = UnitsSuppressed;
 	}	
+	
+	public int getUnitsWindows() {
+		return unitsWindows;
+	}
+
+	public void setUnitsWindows(int unitsWindows) {
+		this.unitsWindows = unitsWindows;
+	}
+
+	public int getUnitsMac() {
+		return unitsMac;
+	}
+
+	public void setUnitsMac(int unitsMac) {
+		this.unitsMac = unitsMac;
+	}
 
 	public void setUnitCounts() {
 		int avail = 0;
@@ -254,6 +273,21 @@ public class Lab {
 		unitsInUse = inuse;
 		unitsOffline = off;
 		unitsSuppressed= sup;
+		setOSCounts();
+	}
+	
+	public void setOSCounts(){
+		int win = 0;
+		int mac = 0;
+		for (Station stat : mapStations) {
+			if (stat.getOs().matches("Windows")) {
+				win++;
+			} else if (stat.getOs().matches("Macintosh")) {
+				mac++;
+			} 
+		}
+		unitsWindows = win;
+		unitsMac = mac;
 	}
 
 
