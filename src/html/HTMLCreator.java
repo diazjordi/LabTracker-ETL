@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import models.Lab;
 import models.Station;
@@ -17,6 +19,8 @@ import setup.PropertyManager;
 
 public class HTMLCreator {
 	
+	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
+	
 	private ArrayList<Lab> labs = new ArrayList<Lab>();
 	private Lab currentLab = null;
 
@@ -24,8 +28,6 @@ public class HTMLCreator {
 
 	private String htmlMapTemplateFilePath = null;
 	private String htmlMapOutputPath = null;
-
-	//private static final Logger logger = LogManager.getLogger("LabTracker");
 	
 	public HTMLCreator() throws IOException{
 		getProps();
@@ -49,8 +51,8 @@ public class HTMLCreator {
 		this.htmlMapTemplateFilePath = htmlProperties.get("htmlMapTemplateFilePath") + currentLab.getMapDesc() + ".html";
 		this.htmlMapOutputPath = htmlProperties.get("htmlMapOutputPath") + currentLab.getMapDesc() + ".php";
 		// Eventually log all of these out
-		//logger.trace("htmlMapTemplateFilePath:  " + htmlMapTemplateFilePath);
-		//logger.trace("htmlMapOutputPath:        " + htmlMapOutputPath);
+		logger.trace("htmlMapTemplateFilePath:  " + htmlMapTemplateFilePath);
+		logger.trace("htmlMapOutputPath:        " + htmlMapOutputPath);
 	}
 	
 	// Writes stations to HTML Map File

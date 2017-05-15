@@ -11,21 +11,28 @@ import html.HTMLCreator;
 import models.Lab;
 import setup.PropertyManager;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 public class LabTrackerETL {
 	
+	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
+	
 	public static ArrayList<Lab> labs = new ArrayList<Lab>();
-
 	
 	public static void main(String[] args) throws IOException {
 		
+		logger.trace("*-----LabTracker Is Starting!-----*");
+		logger.trace("Loading Property Manager");
 		// Get props
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
-		// If you want to hard code path to property file, set here. 
-		// Else comment out the line and it will look for property file in default directory
 		
-		PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/ITS/Properties/LabTracker.properties");
+		// If you want to hard code path to property file, set here. 
+		// Else comment out the line and it will look for property file in default directory		
+		//PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/ITS/Properties/LabTracker.properties");
 		propertyManager.loadProps();
-
+		
+		logger.trace("Setting up JerseyClient");
 		// create REST client
 		JerseyClientGet client = new JerseyClientGet();
 		
@@ -37,13 +44,13 @@ public class LabTrackerETL {
 		jsonParser.parseLabs(response);
 				
 		// Create HTML Maps
-		//HTMLCreator creator = new HTMLCreator(labs);
+		HTMLCreator creator = new HTMLCreator(labs);
 		
 		// push data to DB
 		DBManager db = new DBManager();
 		try {
-			db.updateLabTables(labs);
-			db.updateLabStatusTable(labs);
+			db.insertIntoLabTable(labs);
+			db.insertIntoLabStatusTable(labs);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,6 +58,7 @@ public class LabTrackerETL {
 		}
 		db.finalize();
 		System.out.println("LabTrackerETL done!");
+		logger.trace("LabTrackerETL done!");
 
 	}
 

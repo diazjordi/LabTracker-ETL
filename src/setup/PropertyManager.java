@@ -8,9 +8,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 //When ready for production, update Property file path in PropertyManager class
 public class PropertyManager {
-
+	
+	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
+	
 	private static PropertyManager propertyManagerInstance;
 
 	// General properties path
@@ -51,6 +56,7 @@ public class PropertyManager {
 	}
 	
 	public void loadProps() throws IOException {
+		logger.trace("Loading Property File");
 		// Check if user supplied Property file
 		findPropertyFiles();
 		// Load prop file into main property object
@@ -70,21 +76,22 @@ public class PropertyManager {
 	public void findPropertyFiles() {
 		String defaultPropertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
 		if (propertyFilePath == null) {
-			System.out.println("User did not set property file path, using default path.");
+			logger.trace("User did not set property file path, using default path.");
 			propertyFilePath = defaultPropertyFilePath;
 		} else if (propertyFilePath != null) {
 			boolean pfExists = new File(propertyFilePath).exists();
 			if (pfExists) {
-				System.out.println("User set Property file, found at " + propertyFilePath);
+				logger.trace("User set Property file, found at " + propertyFilePath);
 			}
 		} else {
-			System.out.println("Property file not found in Properties directory or set by user");
-			System.out.println(propertyFilePath);
+			logger.trace("Property file not found in Properties directory or set by user");
+			logger.trace(propertyFilePath);
 			System.exit(1);
 		}
 	}	
 
 	private void setProps() throws IOException {
+		logger.trace("Setting Properties");
 		Set<Object> keys = mainProperties.keySet();
 		for (Object k : keys) {
 			String key = (String) k;
@@ -106,6 +113,7 @@ public class PropertyManager {
 	}
 	
 	private void retrieveSuppressionList(String filePath) throws IOException {
+		logger.trace("Retrieving Suppression Properties");
 		// Temp Properties object to load props from file
 		Properties suppressionProps = new Properties();
 		File suppressionFile = new File(filePath);
