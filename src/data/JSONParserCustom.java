@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -22,11 +25,13 @@ public class JSONParserCustom {
 	
 	// Suppression properties
 	private static Map<String, String> suppressionProperties = new HashMap<String, String>();
-
+	
+	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
+	
 	public JSONParserCustom() {
 		super();
-		suppressionProperties = PropertyManager.getSuppressionProperties();
-		
+		logger.trace("*-----Loading JSONParser Properties!-----*");
+		suppressionProperties = PropertyManager.getSuppressionProperties();		
 	}
 
 	public void parseLab(String json) {
@@ -46,16 +51,20 @@ public class JSONParserCustom {
 		}
 	}
 	
-	public void parseLabs(ArrayList<String> json) {
+	public void parseLabs(HashMap<String, String> responseMap) {
+		logger.trace("JSONParser is Parsing JSON into Lab Objects*");
+		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		for(int i = 0; i < json.size(); i++){
+		for (Entry<String, String> entry : responseMap.entrySet()) {
+			logger.trace("Parsing " + entry.getKey());
 			try {
 				// Convert JSON string to JSON-Mapped Object
-				lab = mapper.readValue(json.get(i), Lab.class);
+				lab = mapper.readValue(entry.getValue(), Lab.class);
 				// Set suppression
 				setSuppressedStations(lab);
 				lab.setUnitCounts();
+				lab.setProperName(entry.getKey());
 				LabTrackerETL.addLab(lab);
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
@@ -65,12 +74,14 @@ public class JSONParserCustom {
 				e.printStackTrace();
 			}
 		}
-	}
+	}	
 	
 	public void setSuppressedStations(Lab lab){
-		for(String value: suppressionProperties.values()){
+		logger.trace("JSONParser is setting suppressed stations");
+		for(String key: suppressionProperties.keySet()){
 			for(Station station: lab.getMapStations()){
-				if(value.toLowerCase().matches(station.getHostName().toLowerCase())){
+				if(key.toLowerCase().matches(station.getHostName().toLowerCase())){
+					logger.trace(station.getHostName() + " is suppressed");
 					station.setStatus("Suppressed");
 				}
 			}

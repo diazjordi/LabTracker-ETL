@@ -41,6 +41,8 @@ public class Lab {
 	@JsonProperty("MapCustomItems")
 	private ArrayList<String> mapCustomItems;
 	
+	private String properName;
+	
 	private int unitsAvailable;
 	private int unitsInUse;
 	private int unitsOffline;
@@ -63,18 +65,17 @@ public class Lab {
 	private int availOtherOS;
 	private int inUseOtherOS;
 	private int offOtherOS;
-	private int suppOtherOS;
-	
-	
+	private int suppOtherOS;	
 
 	public Lab() {
 		super();
 	}
 
-	public Lab(int id, int mapId, String mapName, String mapDesc, int width, int height, float scale, String label,
+	public Lab(String properName, int id, int mapId, String mapName, String mapDesc, int width, int height, float scale, String label,
 			float fontSize, String showOS, String showTT, String customerFileId, String backColor, String foreColor,
 			int grid, ArrayList<Station> mapStations) {
 		super();
+		this.properName = properName;
 		this.id = id;
 		this.mapId = mapId;
 		this.mapName = mapName;
@@ -91,6 +92,14 @@ public class Lab {
 		this.foreColor = foreColor;
 		this.grid = grid;
 		this.mapStations = mapStations;
+	}
+	
+	public String getProperName() {
+		return properName;
+	}
+
+	public void setProperName(String properName) {
+		this.properName = properName;
 	}
 
 	public int getId() {
@@ -424,14 +433,17 @@ public class Lab {
 				+ width + ", height=" + height + ", scale=" + scale + ", label=" + label + ", fontSize=" + fontSize
 				+ ", showOS=" + showOS + ", showTT=" + showTT + ", customerFileId=" + customerFileId + ", backColor="
 				+ backColor + ", foreColor=" + foreColor + ", grid=" + grid + ", mapStations=" + mapStations
-				+ ", mapCustomItems=" + mapCustomItems + ", unitsAvailable=" + unitsAvailable + ", unitsInUse="
-				+ unitsInUse + ", unitsOffline=" + unitsOffline + ", unitsSuppressed=" + unitsSuppressed
-				+ ", unitsWindows=" + unitsWindows + ", availWindows=" + availWindows + ", inUseWindows=" + inUseWindows
-				+ ", offWindows=" + offWindows + ", suppWindows=" + suppWindows + ", unitsMac=" + unitsMac
-				+ ", availMac=" + availMac + ", inUseMac=" + inUseMac + ", offMac=" + offMac + ", suppMac=" + suppMac
-				+ ", unitsOtherOS=" + unitsOtherOS + ", availOtherOS=" + availOtherOS + ", inUseOtherOS=" + inUseOtherOS
-				+ ", offOtherOS=" + offOtherOS + ", suppOtherOS=" + suppOtherOS + "]";
+				+ ", mapCustomItems=" + mapCustomItems + ", properName=" + properName + ", unitsAvailable="
+				+ unitsAvailable + ", unitsInUse=" + unitsInUse + ", unitsOffline=" + unitsOffline
+				+ ", unitsSuppressed=" + unitsSuppressed + ", unitsWindows=" + unitsWindows + ", availWindows="
+				+ availWindows + ", inUseWindows=" + inUseWindows + ", offWindows=" + offWindows + ", suppWindows="
+				+ suppWindows + ", unitsMac=" + unitsMac + ", availMac=" + availMac + ", inUseMac=" + inUseMac
+				+ ", offMac=" + offMac + ", suppMac=" + suppMac + ", unitsOtherOS=" + unitsOtherOS + ", availOtherOS="
+				+ availOtherOS + ", inUseOtherOS=" + inUseOtherOS + ", offOtherOS=" + offOtherOS + ", suppOtherOS="
+				+ suppOtherOS + "]";
 	}
+
+	
 	
 	
 	

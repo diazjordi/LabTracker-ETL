@@ -11,7 +11,7 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-//When ready for production, update Property file path in PropertyManager class
+
 public class PropertyManager {
 	
 	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
@@ -21,29 +21,22 @@ public class PropertyManager {
 	// General properties path
 	private static String propertyFilePath = null;
 	private static Properties mainProperties = new Properties();
-
-	// Jersey Client properties
-	private static Map<String, String> apiClientProps = new HashMap<String, String>();
 	
-	// Map code
+	// Map codes
 	private static Map<String, String> labCodes = new HashMap<String, String>();
-
-	// Parser properties
-	private static Map<String, String> jsonParserProperties = new HashMap<String, String>();
+		
+	// Jersey API Client Properties
+	private static Map<String, String> apiClientProps = new HashMap<String, String>();
 	
 	// Suppression properties
 	private static String supFilePath = null;
-	private static Map<String, String> suppressionProperties = new HashMap<String, String>();
-
+	private static Map<String, String> suppressionProps = new HashMap<String, String>();
+	
 	// Database properties
-	private static Map<String, String> databaseProperties = new HashMap<String, String>();
+	private static Map<String, String> databaseProps = new HashMap<String, String>();
 	
 	// HTML Templates & Properties
-	private static Map<String, String> htmlProperties = new HashMap<String, String>();
-
-
-	// Logger
-	//private static final Logger logger = LogManager.getLogger("LabTracker");
+	private static Map<String, String> mapCreatorProps = new HashMap<String, String>();
 
 	private PropertyManager() {
 	}
@@ -56,9 +49,9 @@ public class PropertyManager {
 	}
 	
 	public void loadProps() throws IOException {
-		logger.trace("Loading Property File");
+		logger.trace("Loading Properties");		
 		// Check if user supplied Property file
-		findPropertyFiles();
+		findPropertyFile();		
 		// Load prop file into main property object
 		File mainPropertyFile = new File(propertyFilePath);
 		FileInputStream mainInputStream = new FileInputStream(mainPropertyFile);
@@ -69,17 +62,26 @@ public class PropertyManager {
 		if (!mainProperties.isEmpty()) {
 			this.setProps();
 		} else if (mainProperties.isEmpty()) {
-			//error.fatalError("No Properties Found!");
+			logger.error("No Properties Found!");
 		}
 	}
 	
-	public void findPropertyFiles() {
-		String defaultPropertyFilePath = new File("../Properties/LabTracker.properties").getAbsolutePath();
+	public void findPropertyFile() throws IOException {
+		logger.trace("Finding Properties File");
+		boolean pfExists;		
 		if (propertyFilePath == null) {
+			String rootDirectory = new File(".").getCanonicalPath();
+			String propertiesDir = rootDirectory.replace("JARs","Properties");
+			String propertiesFile = propertiesDir.concat("/LabTracker.properties");
+			logger.trace(propertiesFile);
 			logger.trace("User did not set property file path, using default path.");
-			propertyFilePath = defaultPropertyFilePath;
+			pfExists = new File(propertiesFile).exists();
+			if(pfExists){
+				logger.trace("Found property file at path: " + propertiesFile);
+				propertyFilePath = propertiesFile;
+			}
 		} else if (propertyFilePath != null) {
-			boolean pfExists = new File(propertyFilePath).exists();
+			pfExists = new File(propertyFilePath).exists();
 			if (pfExists) {
 				logger.trace("User set Property file, found at " + propertyFilePath);
 			}
@@ -91,40 +93,43 @@ public class PropertyManager {
 	}	
 
 	private void setProps() throws IOException {
-		logger.trace("Setting Properties");
+		logger.trace("Populating Property Maps");
 		Set<Object> keys = mainProperties.keySet();
 		for (Object k : keys) {
 			String key = (String) k;
-			if (key.startsWith("api")) {
-				apiClientProps.put(key, mainProperties.getProperty(key));
-			} else if (key.startsWith("lab")) {
+			if (key.startsWith("lab")) {
 				labCodes.put(key.substring(4), mainProperties.getProperty(key));
-			} else if (key.startsWith("parser")) {
-				jsonParserProperties.put(key, mainProperties.getProperty(key));
-			} else if (key.startsWith("db")) {
-				databaseProperties.put(key, mainProperties.getProperty(key));
-			} else if (key.startsWith("html")) {
-				htmlProperties.put(key, mainProperties.getProperty(key));
+			} else if (key.startsWith("api")) {
+				apiClientProps.put(key.substring(4), mainProperties.getProperty(key));
 			} else if (key.startsWith("sup")) {
-				supFilePath = mainProperties.getProperty(key);
-				retrieveSuppressionList(supFilePath);
-			} 
+				supFilePath = mainProperties.getProperty(key);				
+			} else if (key.startsWith("db")) {
+				databaseProps.put(key.substring(3), mainProperties.getProperty(key));
+			} else if (key.startsWith("html")) {
+				mapCreatorProps.put(key.substring(5), mainProperties.getProperty(key));
+			}			
 		}
+		retrieveSuppressionList(supFilePath);
+		logger.trace(apiClientProps.toString());
 	}
 	
 	private void retrieveSuppressionList(String filePath) throws IOException {
 		logger.trace("Retrieving Suppression Properties");
 		// Temp Properties object to load props from file
-		Properties suppressionProps = new Properties();
+		Properties tempProps = new Properties();
 		File suppressionFile = new File(filePath);
-		FileInputStream suppressionFileInput = new FileInputStream(suppressionFile);
-		suppressionProps.load(suppressionFileInput);
-		// Iterate through props
-		Set<Object> keys = suppressionProps.keySet();
-		for(Object k: keys){
-			String key = (String) k;
-			suppressionProperties.put(key, suppressionProps.getProperty(key));
-		}
+		if(suppressionFile.exists()){
+			FileInputStream suppressionFileInput = new FileInputStream(suppressionFile);
+			tempProps.load(suppressionFileInput);
+			// Iterate through props
+			Set<Object> keys = tempProps.keySet();
+			for(Object k: keys){
+				String key = (String) k;
+				suppressionProps.put(key, tempProps.getProperty(key));
+			}
+		} else {
+			logger.trace("Suppression File path not set! Will continue w/o suppression");
+		}		
 	}	
 	
 	public static String getPropertyFilePath() {
@@ -158,37 +163,29 @@ public class PropertyManager {
 	public static void setLabCodes(Map<String, String> labCodes) {
 		PropertyManager.labCodes = labCodes;
 	}
-
-	public static Map<String, String> getJsonParserProperties() {
-		return jsonParserProperties;
-	}
-
-	public static void setJsonParserProperties(Map<String, String> jsonParserProperties) {
-		PropertyManager.jsonParserProperties = jsonParserProperties;
-	}
 	
 	public static Map<String, String> getSuppressionProperties() {
-		return suppressionProperties;
+		return suppressionProps;
 	}
 
 	public static void setSuppressionProperties(Map<String, String> suppressionProperties) {
-		PropertyManager.suppressionProperties = suppressionProperties;
+		PropertyManager.suppressionProps = suppressionProperties;
 	}
 
 	public static Map<String, String> getDatabaseProperties() {
-		return databaseProperties;
+		return databaseProps;
 	}
 
 	public static void setDatabaseProperties(Map<String, String> databaseProperties) {
-		PropertyManager.databaseProperties = databaseProperties;
+		PropertyManager.databaseProps = databaseProperties;
 	}
 	
 	public Map<String, String> getHtmlProperties() {
-		return htmlProperties;
+		return mapCreatorProps;
 	}
 	
 	public void setHtmlProperties(Map<String, String> htmlProperties) {
-		PropertyManager.htmlProperties = htmlProperties;
+		PropertyManager.mapCreatorProps = htmlProperties;
 	}
 
 	public static void setPropertyManagerInstance(PropertyManager propertyManagerInstance) {

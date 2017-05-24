@@ -1,4 +1,4 @@
-package html;
+package maps;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,53 +12,60 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import main.LabTrackerETL;
 import models.Lab;
 import models.Station;
 import setup.PropertyManager;
 
 
-public class HTMLCreator {
+public class MapCreator {
 	
 	private static final Logger logger = LogManager.getLogger("LabTrackerETL");
 	
 	private ArrayList<Lab> labs = new ArrayList<Lab>();
 	private Lab currentLab = null;
 
-	private Map<String, String> htmlProperties = new HashMap<String, String>();
-
-	private String htmlMapTemplateFilePath = null;
-	private String htmlMapOutputPath = null;
+	private Map<String, String> mapProps = new HashMap<String, String>();
 	
-	public HTMLCreator() throws IOException{
+	private boolean enableCreator;
+	private String mapTemplatesDir = null;
+	private String mapOutputDir = null;
+	
+	public MapCreator() throws IOException{
+		logger.trace("*-----Loading MapCreator Properties!-----*");
 		getProps();
 	}
 	
-	public HTMLCreator(ArrayList<Lab> labs) throws IOException{
-		this.labs = labs;		
-		for(Lab lab: labs){
-			currentLab = lab;
-			getProps();
-			writeMapOfStationsToHTML();
-		}		
-	}
-
 	public void getProps() throws IOException {
 		PropertyManager propManager = PropertyManager.getPropertyManagerInstance();
 		// Get props
-		this.htmlProperties = propManager.getHtmlProperties();
-		//System.out.println(htmlProperties.get("htmlMapTemplateFilePath") + lab.getMapDesc());
+		this.mapProps = propManager.getHtmlProperties();
 		// Retrieve HTML props
-		this.htmlMapTemplateFilePath = htmlProperties.get("htmlMapTemplateFilePath") + currentLab.getMapDesc() + ".html";
-		this.htmlMapOutputPath = htmlProperties.get("htmlMapOutputPath") + currentLab.getMapDesc() + ".php";
+		this.enableCreator = mapProps.get("EnableCreator").matches("true");
+		this.mapTemplatesDir = mapProps.get("MapTemplatesDir");
+		this.mapOutputDir = mapProps.get("MapOutputDir");
 		// Eventually log all of these out
-		logger.trace("htmlMapTemplateFilePath:  " + htmlMapTemplateFilePath);
-		logger.trace("htmlMapOutputPath:        " + htmlMapOutputPath);
+		logger.trace("EnableCreator:    " + enableCreator);
+		logger.trace("MapTemplatesDir:  " + mapTemplatesDir);
+		logger.trace("MapOutputDir:     " + mapOutputDir);
+	}
+	
+	public void createMaps() throws IOException{
+		this.labs = LabTrackerETL.labs;
+		if(enableCreator){
+			for(Lab lab: labs){
+				currentLab = lab;
+				logger.trace("Creating map for " + currentLab.getProperName());
+				writeMapOfStationsToTemplate();				
+			}
+		}			
 	}
 	
 	// Writes stations to HTML Map File
 	@SuppressWarnings({ "deprecation", "unused" })
-	public void writeMapOfStationsToHTML() throws IOException{
-		File htmlMapTemplateFile = new File(htmlMapTemplateFilePath);
+	public void writeMapOfStationsToTemplate() throws IOException{
+		logger.trace("Writing map for " + currentLab.getProperName() + " to directory " + mapOutputDir);
+		File htmlMapTemplateFile = new File(mapTemplatesDir  + currentLab.getProperName() + ".html");
 		String htmlString = FileUtils.readFileToString(htmlMapTemplateFile);			
 		// Color Strings
 		String availColor      = "<FONT COLOR=\"#FFCB2F\">";
@@ -89,7 +96,6 @@ public class HTMLCreator {
 				String completeMatch = begMatch + station.getStationNameShort()	+ endMatch + station.getStationNameShort().toUpperCase();
 				String underLinedColor = offlineColor + "<u>" + station.getStationNameShort().toUpperCase() + "</u>";
 				if (htmlString.contains(completeMatch)) {
-					//System.out.println(completeMatch);
 					htmlString = htmlString.replace(completeMatch,underLinedColor);
 				}
 			}			
@@ -121,14 +127,11 @@ public class HTMLCreator {
 		String avail = "(Available - " + numAvail   + ", " + numUnits + ")";
 		String inUse = "(In Use    - " + numInUse   + ", " + numUnits + ")";
 		String off = "(Offline   - "   + numOffline + ", " + numUnits + ")";
-//		logger.trace(avail);
-//		logger.trace(inUse);
-//		logger.trace(off);
 		
 		htmlString = htmlString.replace("$availSummary", avail);
 		htmlString = htmlString.replace("$inUseSummary", inUse);
 		htmlString = htmlString.replace("$offSummary", off);
-		File newHtmlFile = new File(htmlMapOutputPath);
+		File newHtmlFile = new File(mapOutputDir + currentLab.getProperName() + ".php");
 		FileUtils.writeStringToFile(newHtmlFile, htmlString);			
 	}
 
@@ -139,8 +142,5 @@ public class HTMLCreator {
 
 	public void setLabs(ArrayList<Lab> labs) {
 		this.labs = labs;
-	}
-	
-	
-	
+	}	
 }

@@ -3,11 +3,12 @@ package main;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import api.JerseyClientGet;
+import api.JerseyClient;
 import data.JSONParserCustom;
 import db.DBManager;
-import html.HTMLCreator;
+import maps.MapCreator;
 import models.Lab;
 import setup.PropertyManager;
 
@@ -23,30 +24,34 @@ public class LabTrackerETL {
 	public static void main(String[] args) throws IOException {
 		
 		logger.trace("*-----LabTracker Is Starting!-----*");
-		logger.trace("Loading Property Manager");
+		
+		logger.trace("*-----Setting up Property Manager!-----*");
 		// Get props
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
 		
-		// If you want to hard code path to property file, set here. 
-		// Else comment out the line and it will look for property file in default directory		
-		//PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/ITS/Properties/LabTracker.properties");
+		PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/ITS/Properties/LabTracker.properties");
 		propertyManager.loadProps();
 		
-		logger.trace("Setting up JerseyClient");
 		// create REST client
-		JerseyClientGet client = new JerseyClientGet();
+		logger.trace("*-----Setting up JerseyClient!-----*");
+		JerseyClient client = new JerseyClient();
 		
-		// make GET request and store JSON reponse
-		ArrayList<String> response = client.getMaps();
+		// make GET request and store JSON response
+		logger.trace("*-----Connecting to LabStats API!-----*");
+		HashMap<String, String> response = client.getMaps();
 		
-		// parse JSON reponse into objects
+		// parse JSON response into Lab objects
+		logger.trace("*-----Setting up JSONParser!-----*");
 		JSONParserCustom jsonParser = new JSONParserCustom();
 		jsonParser.parseLabs(response);
 				
 		// Create HTML Maps
-		HTMLCreator creator = new HTMLCreator(labs);
+		logger.trace("*-----Setting up MapCreator!-----*");
+		MapCreator creator = new MapCreator();
+		creator.createMaps();
 		
 		// push data to DB
+		logger.trace("*-----Setting up DBManager!-----*");
 		DBManager db = new DBManager();
 		try {
 			db.insertIntoLabTable(labs);
@@ -57,8 +62,12 @@ public class LabTrackerETL {
 			db.closeConnection();
 		}
 		db.finalize();
-		System.out.println("LabTrackerETL done!");
 		logger.trace("LabTrackerETL done!");
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
 
 	}
 
