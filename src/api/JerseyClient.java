@@ -41,16 +41,19 @@ public class JerseyClient {
 	}
 
 	public String getMap(int mapID) {
+		logger.trace("Making API Requests for Map: " + mapID);
 		String json = null;
 		try {
 			Client client = Client.create();
 			WebResource webResource = client.resource(getMapURL + mapID);
 			ClientResponse response = webResource.accept("application/json").header("Authorization", authCode).get(ClientResponse.class);
 			if (response.getStatus() != 200) {
+				logger.error("Failed : HTTP error code : " + response.getStatus());
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 			json = response.getEntity(String.class);
 		} catch (Exception e) {
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
 		return json;
@@ -62,13 +65,16 @@ public class JerseyClient {
 		for (Entry<String, String> entry : labCodes.entrySet()) {
 			try {
 				Client client = Client.create();
+				logger.trace("Requesting Map: " + entry.getValue());
 				WebResource webResource = client.resource(getMapURL + entry.getValue());
 				ClientResponse response = webResource.accept("application/json").header("Authorization", authCode).get(ClientResponse.class);
 				if (response.getStatus() != 200) {
+					logger.error("Failed : HTTP error code : " + response.getStatus());
 					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 				}
 				responseMap.put(entry.getKey(), response.getEntity(String.class));
 			} catch (Exception e) {
+				logger.error(e.toString());
 				e.printStackTrace();
 			}			
 		}		

@@ -23,6 +23,11 @@ public class LabTrackerETL {
 	
 	public static void main(String[] args) throws IOException {
 		
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
+		logger.trace("");
 		logger.trace("*-----LabTracker Is Starting!-----*");
 		
 		logger.trace("*-----Setting up Property Manager!-----*");

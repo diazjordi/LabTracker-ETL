@@ -78,9 +78,10 @@ public class DBManager {
 	}
 		
 	public void insertIntoLabTable(ArrayList<Lab> labs) throws SQLException{
-		logger.trace("DBConnector is Writing to Lab table");
+		logger.trace("DBConnector is Writing to Lab specific table");
 		if(pushToDB){
 			for(Lab lab: labs){
+				logger.trace("Updating table for: " + lab.getProperName());
 				try {
 					Statement stmt = (com.mysql.jdbc.Statement) con.createStatement();
 					for (Station station : lab.getMapStations()) {
@@ -99,8 +100,8 @@ public class DBManager {
 								+ station.getStationName().toUpperCase() + "','"
 								+ station.getStatus().toUpperCase() + "',"
 								+ "NOW())";
-						logger.trace(query);
 						stmt.executeUpdate(query);
+						//logger.trace(query);
 					}
 				} catch (SQLException ex) {
 					ex.printStackTrace();
@@ -147,8 +148,8 @@ public class DBManager {
 							+ lab.getOffOtherOS() + "','"
 							+ lab.getSuppOtherOS() + "',"
 							+ "NOW())";
-						logger.trace(query);
-					stmt.executeUpdate(query);					
+					stmt.executeUpdate(query);
+					logger.trace(query.substring(query.indexOf("VALUES")));
 				} catch (SQLException ex) {
 					ex.printStackTrace();
 					logger.error(ex);

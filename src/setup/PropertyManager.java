@@ -110,7 +110,6 @@ public class PropertyManager {
 			}			
 		}
 		retrieveSuppressionList(supFilePath);
-		logger.trace(apiClientProps.toString());
 	}
 	
 	private void retrieveSuppressionList(String filePath) throws IOException {

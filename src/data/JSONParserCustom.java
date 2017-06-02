@@ -52,7 +52,7 @@ public class JSONParserCustom {
 	}
 	
 	public void parseLabs(HashMap<String, String> responseMap) {
-		logger.trace("JSONParser is Parsing JSON into Lab Objects*");
+		logger.trace("JSONParser is Parsing JSON into Lab Objects");
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
