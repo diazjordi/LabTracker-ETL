@@ -73,6 +73,7 @@ public class LabTrackerETL {
 		logger.trace("");
 		logger.trace("");
 		logger.trace("");
+		System.exit(0);
 
 	}
 
