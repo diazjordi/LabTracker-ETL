@@ -68,7 +68,7 @@ public class MapCreator {
 		File htmlMapTemplateFile = new File(mapTemplatesDir  + currentLab.getProperName() + ".html");
 		String htmlString = FileUtils.readFileToString(htmlMapTemplateFile);			
 		// Color Strings
-		String availColor      = "<FONT COLOR=\"#FFCB2F\">";
+		String availColor      = "<FONT COLOR=\"#FFCE00\">";
 		String inUseColor      = "<FONT COLOR=\"#665113\">";
 		String offlineColor    = "<FONT COLOR=\"#595138\">";
 		String suppressedColor = "<FONT COLOR=\"#000000\">";
@@ -93,7 +93,7 @@ public class MapCreator {
 			} 
 						
 			else if (station.getStatus().matches("Offline")){
-				String completeMatch = begMatch + station.getStationNameShort()	+ endMatch + station.getStationNameShort().toUpperCase();
+				String completeMatch = begMatch + station.getStationNameShort().toLowerCase() + endMatch + station.getStationNameShort().toUpperCase();
 				String underLinedColor = offlineColor + "<u>" + station.getStationNameShort().toUpperCase() + "</u>";
 				if (htmlString.contains(completeMatch)) {
 					htmlString = htmlString.replace(completeMatch,underLinedColor);

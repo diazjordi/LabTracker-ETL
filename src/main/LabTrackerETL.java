@@ -34,7 +34,7 @@ public class LabTrackerETL {
 		// Get props
 		PropertyManager propertyManager = PropertyManager.getPropertyManagerInstance();
 		
-		PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/ITS/Properties/LabTracker.properties");
+		PropertyManager.setPropertyFilePath("/home/developer/Desktop/LabTracker/LibraryNorth/Properties/LabTracker.properties");
 		propertyManager.loadProps();
 		
 		// create REST client
@@ -53,7 +53,7 @@ public class LabTrackerETL {
 		// Create HTML Maps
 		logger.trace("*-----Setting up MapCreator!-----*");
 		MapCreator creator = new MapCreator();
-		creator.createMaps();
+		//creator.createMaps();
 		
 		// push data to DB
 		logger.trace("*-----Setting up DBManager!-----*");
