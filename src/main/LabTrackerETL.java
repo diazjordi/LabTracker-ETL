@@ -53,7 +53,7 @@ public class LabTrackerETL {
 		// Create HTML Maps
 		logger.trace("*-----Setting up MapCreator!-----*");
 		MapCreator creator = new MapCreator();
-		//creator.createMaps();
+		creator.createMaps();
 		
 		// push data to DB
 		logger.trace("*-----Setting up DBManager!-----*");
